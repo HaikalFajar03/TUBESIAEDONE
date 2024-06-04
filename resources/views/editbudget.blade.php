@@ -53,79 +53,110 @@
     <link href="assets/css/style.css" rel="stylesheet">
     <link id="color-scheme" href="assets/css/colors/default.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+    }
 
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-top: 20px;
-        }
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-top: 20px;
+    }
 
-        form {
-            width: 300px;
-            margin: 50px auto;
-            padding: 30px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
+    .container {
+        width: 80%;
+        margin: auto;
+    }
 
-        form label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 8px;
-        }
+    .budget-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #fff;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        width: 30%;
+        margin: auto;
+    }
 
-        form select, form input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-        }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
 
-        form input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
+    .form-group label {
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
 
-        form input[type="submit"]:hover {
-            background-color: #45a049;
-        }
-    </style>
+    .form-group input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .form-group input[type="submit"] {
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-group input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    .center-transaksi-tombol {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+    .center-transaksi-tombol button {
+        background-color: black;
+        color: white;
+        margin: 10px;
+      }
+</style>
   </head>
-        <section class="module">
+  <section class="module">
         <div class="container">
-        <h1>Edit Budget</h1>
-        <!-- Perhatikan bahwa action form sekarang mengarah ke route web, bukan API -->
-        <form action="/update-budget/{{ $budget->id }}" method="POST">
-            @csrf
-            @method('POST')
+            <h1>Edit Budget</h1>
+            <!-- Note that the form action now points to a web route, not an API -->
+            <form action="/update-budget/{{ $budget->id }}" method="POST" class="budget-form">
+                @csrf
+                @method('POST')
 
-            <label for="category">Kategori:</label><br>
-            <input type="text" id="category" name="category" value="{{ $budget->category }}"><br>
+                <div class="form-group">
+                    <label for="category">Kategori:</label>
+                    <input type="text" id="category" name="category" value="{{ $budget->category }}">
+                </div>
 
-            <label for="amount">Jumlah:</label><br>
-            <input type="number" id="amount" name="amount" value="{{ $budget->amount }}"><br>
+                <div class="form-group">
+                    <label for="amount">Jumlah:</label>
+                    <input type="number" id="amount" name="amount" value="{{ $budget->amount }}">
+                </div>
 
-            <input type="submit" value="Perbarui">
-        </form>
+                <div class="form-group">
+                    <input type="submit" value="Perbarui">
+                </div>
+            </form>
         </div>
-    </div>
 
-        </section>
+        <div class="center-transaksi-tombol">
+            <a href="/indexbudget">
+            <button>Kembali</button>
+            </a>
+        </div>
+    </section>
     </main>
     <!--  
     JavaScripts

@@ -110,6 +110,18 @@
     .btn i {
         margin-right: 5px;
     }
+
+    .center-transaksi-tombol {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+    .center-transaksi-tombol button {
+        background-color: black;
+        color: white;
+        margin: 10px;
+      }
 </style>
 
     </style>
@@ -169,6 +181,14 @@
                 <!-- Data transaksi akan ditampilkan di sini -->
             </tbody>
         </table>
+        <!-- Display total amount -->
+        <h2>Total Pengeluaran: <span id="totalAmount"></span></h2>
+    </div>
+
+    <div class="center-transaksi-tombol">
+      <a href="/#services">
+      <button>Kembali</button>
+      </a>
     </div>
 </section>
 
@@ -259,6 +279,7 @@
         let table = document.getElementById('transactionTable');
         // Clear the table first
         table.innerHTML = '';
+        let totalAmount = 0;
         data.data.forEach(item => {
             let row = table.insertRow();
             row.insertCell(0).innerHTML = item.id;
@@ -268,7 +289,9 @@
             row.insertCell(4).innerHTML = item.amount;
             let actions = row.insertCell(5);
             actions.innerHTML = `<a href="/edittransaksi/${item.id}" class="btn btn-primary"><i class="fas fa-edit"></i> Perbarui</a> <button onclick="deleteTransaction(${item.id})" class="btn btn-danger"><i class="fas fa-trash"></i> Hapus</button>`;
+            totalAmount += Number(item.amount);
         });
+        document.getElementById('totalAmount').innerText = totalAmount;
     }
 </script>
   </body>
