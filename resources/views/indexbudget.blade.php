@@ -126,6 +126,18 @@
     .btn i {
         margin-right: 5px;
     }
+
+    .center-transaksi-tombol {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+    .center-transaksi-tombol button {
+        background-color: black;
+        color: white;
+        margin: 10px;
+      }
 </style>
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
@@ -175,6 +187,13 @@
                 <!-- Data budget akan ditampilkan di sini -->
             </tbody>
         </table>
+        <!-- Display total amount -->
+        <h2>Total Anggaran: <span id="totalAmount"></span></h2>
+    </div>
+    <div class="center-transaksi-tombol">
+      <a href="/#services">
+      <button>Kembali</button>
+      </a>
     </div>
 </section>
         <div class="module-small bg-dark">
@@ -271,58 +290,66 @@
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
-        // Metode DELETE
-        function deleteBudget(id) {
-            fetch(`http://127.0.0.1:8000/api/budgets/${id}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                // Refresh tabel setelah penghapusan
-                location.reload();
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
-
-        // Metode PUT
-function updateTransaction(id, updatedData) {
-    fetch(`http://127.0.0.1:8000/api/budgets/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        // Arahkan pengguna kembali ke indextransaksi.blade.php setelah pembaruan berhasil
-        window.location.href = '/indexbudget';
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-}
-
-
-fetch('http://127.0.0.1:8000/api/budgets')
+    // Metode DELETE
+    function deleteBudget(id) {
+        fetch(`http://127.0.0.1:8000/api/budgets/${id}`, {
+            method: 'DELETE'
+        })
         .then(response => response.json())
         .then(data => {
-            let table = document.getElementById('budgetTable');
-            data.data.forEach(item => {
-                let row = table.insertRow();
-                row.insertCell(0).innerHTML = item.id;
-                row.insertCell(1).innerHTML = item.category;
-                row.insertCell(2).innerHTML = item.amount;
-                let actions = row.insertCell(3);
-                actions.innerHTML = `<a href="/editbudget/${item.id}" class="btn btn-primary"><i class="fas fa-edit"></i> Perbarui</a> <button onclick="deleteBudget(${item.id})" class="btn btn-danger"><i class="fas fa-trash"></i> Hapus</button>`;
-            });
+            console.log('Success:', data);
+            // Refresh tabel setelah penghapusan
+            location.reload();
         })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Metode PUT
+    function updateTransaction(id, updatedData) {
+        fetch(`http://127.0.0.1:8000/api/budgets/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Arahkan pengguna kembali ke indextransaksi.blade.php setelah pembaruan berhasil
+            window.location.href = '/indexbudget';
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Fetch all data initially
+    fetch('http://127.0.0.1:8000/api/budgets')
+        .then(response => response.json())
+        .then(data => populateTable(data))
         .catch(error => console.error('Error:', error));
-    </script>
+
+    // Function to populate the table with data
+    function populateTable(data) {
+        let table = document.getElementById('budgetTable');
+        // Clear the table first
+        table.innerHTML = '';
+        let totalAmount = 0;
+        data.data.forEach(item => {
+            let row = table.insertRow();
+            row.insertCell(0).innerHTML = item.id;
+            row.insertCell(1).innerHTML = item.category;
+            row.insertCell(2).innerHTML = item.amount;
+            let actions = row.insertCell(3);
+            actions.innerHTML = `<a href="/editbudget/${item.id}" class="btn btn-primary"><i class="fas fa-edit"></i> Perbarui</a> <button onclick="deleteBudget(${item.id})" class="btn btn-danger"><i class="fas fa-trash"></i> Hapus</button>`;
+            totalAmount += Number(item.amount);
+        });
+        document.getElementById('totalAmount').innerText = totalAmount;
+    }
+</script>
 </body>
 </html>
   </body>
