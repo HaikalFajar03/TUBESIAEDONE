@@ -99,6 +99,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         box-sizing: border-box;
+        width: 100%;
     }
 
     .form-group input[type="submit"] {
@@ -118,45 +119,53 @@
         display: flex;
         justify-content: center;
         margin-top: 10px;
-      }
+    }
 
     .center-transaksi-tombol button {
         background-color: black;
         color: white;
         margin: 10px;
-      }
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .center-transaksi-tombol button:hover {
+        background-color: #45a049;
+    }
 </style>
   </head>
   <section class="module">
-        <div class="container">
-            <h1>Edit Budget</h1>
-            <!-- Note that the form action now points to a web route, not an API -->
-            <form action="/update-budget/{{ $budget->id }}" method="POST" class="budget-form">
-                @csrf
-                @method('POST')
+    <div class="container">
+        <h1>Edit Budget</h1>
+        <form id="budgetForm" class="budget-form">
+            @csrf
+            @method('PUT')
 
-                <div class="form-group">
-                    <label for="category">Kategori:</label>
-                    <input type="text" id="category" name="category" value="{{ $budget->category }}">
-                </div>
+            <div class="form-group">
+                <label for="category">Kategori:</label>
+                <input type="text" id="category" name="category" value="{{ $budget->category }}">
+            </div>
 
-                <div class="form-group">
-                    <label for="amount">Jumlah:</label>
-                    <input type="number" id="amount" name="amount" value="{{ $budget->amount }}">
-                </div>
+            <div class="form-group">
+                <label for="amount">Jumlah:</label>
+                <input type="number" id="amount" name="amount" value="{{ $budget->amount }}">
+            </div>
 
-                <div class="form-group">
-                    <input type="submit" value="Perbarui">
-                </div>
-            </form>
-        </div>
+            <div class="form-group">
+                <input type="submit" value="Perbarui">
+            </div>
+        </form>
+    </div>
 
-        <div class="center-transaksi-tombol">
-            <a href="/indexbudget">
-            <button>Kembali</button>
-            </a>
-        </div>
-    </section>
+    <div class="center-transaksi-tombol">
+        <a href="/indexbudget">
+        <button>Kembali</button>
+        </a>
+    </div>
+</section>
     </main>
     <!--  
     JavaScripts
@@ -175,5 +184,41 @@
     <script src="assets/lib/simple-text-rotator/jquery.simple-text-rotator.min.js"></script>
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+    // Metode PUT
+    function updateBudget(id, updatedData) {
+        fetch(`http://127.0.0.1:8000/api/budgets/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Arahkan pengguna kembali ke indexbudget.blade.php setelah pembaruan berhasil
+            window.location.href = '/indexbudget';
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Get the form and add an event listener for the submit event
+    const form = document.getElementById('budgetForm');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        // Get the form data
+        const formData = new FormData(form);
+
+        // Convert the form data to an object
+        const data = Object.fromEntries(formData);
+
+        // Call the updateBudget function
+        updateBudget({{ $budget->id }}, data);
+    });
+</script>
   </body>
 </html>
