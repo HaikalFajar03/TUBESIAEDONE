@@ -238,26 +238,6 @@
         });
     }
 
-    // Metode PUT
-    function updateTransaction(id, updatedData) {
-        fetch(`http://127.0.0.1:8000/api/transactions/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedData),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            // Arahkan pengguna kembali ke indextransaksi.blade.php setelah pembaruan berhasil
-            window.location.href = '/indextransaksi';
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-
     // Fetch data based on search input
     document.getElementById('searchForm').addEventListener('submit', function(event) {
         event.preventDefault();

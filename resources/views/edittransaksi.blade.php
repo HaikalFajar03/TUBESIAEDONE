@@ -108,18 +108,29 @@ input[type="submit"]:hover {
     background-color: #0056b3;
 }
 
+.center-transaksi-tombol {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+      }
+
+    .center-transaksi-tombol button {
+        background-color: black;
+        color: white;
+        margin: 10px;
+      }
+
     </style>
   </head>
   <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
     <main>
       <div class="main">
-        <section class="module">
+      <section class="module">
     <div class="container-transaksi">
         <h1>Edit Transaksi</h1>
-        <!-- Perhatikan bahwa action form sekarang mengarah ke route web, bukan API -->
-        <form action="/update-transaction/{{ $transaction->id }}" method="POST">
+        <form id="transactionForm">
             @csrf
-            @method('POST')
+            @method('PUT')
 
             <label for="category">Kategori:</label><br>
             <input type="text" id="category" name="category" value="{{ $transaction->category }}"><br>
@@ -160,5 +171,41 @@ input[type="submit"]:hover {
     <script src="assets/lib/simple-text-rotator/jquery.simple-text-rotator.min.js"></script>
     <script src="assets/js/plugins.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+    // Metode PUT
+    function updateTransaction(id, updatedData) {
+        fetch(`http://127.0.0.1:8000/api/transactions/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            // Arahkan pengguna kembali ke indextransaksi.blade.php setelah pembaruan berhasil
+            window.location.href = '/indextransaksi';
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    // Get the form and add an event listener for the submit event
+    const form = document.getElementById('transactionForm');
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+
+        // Get the form data
+        const formData = new FormData(form);
+
+        // Convert the form data to an object
+        const data = Object.fromEntries(formData);
+
+        // Call the updateTransaction function
+        updateTransaction({{ $transaction->id }}, data);
+    });
+</script>
   </body>
 </html>
